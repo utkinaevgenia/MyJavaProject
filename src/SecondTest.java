@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class SecondTest {
     private AppiumDriver driver;
@@ -193,6 +194,46 @@ public class SecondTest {
         );
     }
 
+    @Test
+    public void testAssertTitle() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Skip')]"),
+                "Cannot find Skip button",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find search input",
+                5
+        );
+
+        String search_line = "Java";
+        waitForElementAndSentValue(
+                By.id("org.wikipedia:id/search_src_text"),
+                search_line,
+                "Cannot find input to set name of article folder",
+                15
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='Java (programming language)']"),
+                "Cannot find 'Java (programming language)' article",
+                15
+        );
+
+//        waitForElementPresent(
+//                By.xpath("//*[contains(@text,'Java (programming language)')]"),
+//                "errorMessage",
+//                15
+//        );
+
+        assertElementPresent(
+                By.xpath("//*[contains(@text,'Java (programming language)')]"),
+                "Cannot find article title"
+        );
+    }
+
     private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.click();
@@ -271,5 +312,14 @@ public class SecondTest {
     {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         return element.getAttribute(attribute);
+    }
+
+    private void assertElementPresent (By by, String error_message)
+    {
+        String article_title = driver.findElement(by).getAttribute("text") ;
+        if (article_title == "Java (programming language)") {
+            String default_message = "An element '" + by.toString() + "'supposed to be present";
+            throw new AssertionError(default_message + " " + error_message);
+        }
     }
 }
