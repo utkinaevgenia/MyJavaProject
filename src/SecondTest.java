@@ -12,7 +12,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.awt.*;
 import java.net.URL;
 
 public class SecondTest {
@@ -105,7 +104,7 @@ public class SecondTest {
     }
 
     @Test
-    public void testSwipeOnbording()
+    public void testSwipeLeftOnbording()
     {
         waitForElementPresent(
                 By.xpath("//*[contains(@text,'Skip')]"),
@@ -113,7 +112,7 @@ public class SecondTest {
                 5
         );
 
-        swipeUpToFindElement(
+        swipeLeftUpToFindElement(
                 By.xpath("//*[contains(@text,'Get started')]"),
                 "Cannot find 'Get started' text",
                 15
@@ -123,6 +122,74 @@ public class SecondTest {
                 By.xpath("//*[contains(@text,'Get started')]"),
                 "Cannot find 'Get started' text",
                 15
+        );
+    }
+
+    @Test
+    public void swipeLeftAndCheckTitle() {
+        waitForElementPresent(
+                By.xpath("//*[contains(@text,'Skip')]"),
+                "Cannot find Skip button",
+                5
+        );
+
+        String error_message_for_get_attribute = "Cannot find title on the screen";
+
+        swipeLeft(200);
+
+        String title_first_screen = waitForElementAndGetAttribute(
+                By.id("org.wikipedia:id/primaryTextView"),
+                "text",
+                error_message_for_get_attribute,
+                15
+        );
+
+        Assert.assertEquals(
+                "Unexpected title of first screen",
+                "New ways to explore",
+                title_first_screen
+        );
+
+        swipeLeft(200);
+
+        String title_second_screen = waitForElementAndGetAttribute(
+                By.id("org.wikipedia:id/primaryTextView"),
+                "text",
+                error_message_for_get_attribute,
+                15
+        );
+
+        Assert.assertEquals(
+                "Unexpected title of second screen",
+                "Reading lists with sync",
+                title_second_screen
+        );
+
+        swipeLeft(200);
+
+        String title_third_screen = waitForElementAndGetAttribute(
+                By.id("org.wikipedia:id/primaryTextView"),
+                "text",
+                error_message_for_get_attribute,
+                15
+        );
+
+        Assert.assertEquals(
+                "Unexpected title of third screen",
+                "Data & Privacy",
+                title_third_screen
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Get started')]"),
+                "Cannot find 'Get started' text",
+                15
+        );
+
+        waitForElementPresent(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find search input",
+                5
         );
     }
 
@@ -166,7 +233,7 @@ public class SecondTest {
         Assert.assertEquals(error_message, expected_text, actual_text);
     }
 
-    protected void swipeUp(int timeOfSwipe)
+    protected void swipeLeft(int timeOfSwipe)
     {
         TouchAction action = new TouchAction(driver);
         Dimension size = driver.manage().window().getSize();
@@ -182,12 +249,12 @@ public class SecondTest {
                 .perform();
     }
 
-    protected void swipeUpQuick ()
+    protected void swipeLeftQuick()
     {
-        swipeUp(200);
+        swipeLeft(200);
     }
 
-    protected void swipeUpToFindElement (By by, String error_message, int max_swipes)
+    protected void swipeLeftUpToFindElement(By by, String error_message, int max_swipes)
     {
         int already_swiped = 0;
         while (driver.findElements(by).size() == 0) {
@@ -195,8 +262,14 @@ public class SecondTest {
                 waitForElementPresent(by, "Cannot find element by swiping up \n" + error_message, 0);
                 return;
             }
-            swipeUpQuick();
+            swipeLeftQuick();
             ++ already_swiped;
         }
+    }
+
+    public String waitForElementAndGetAttribute (By by, String attribute, String error_message, long timeoutInSeconds)
+    {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+        return element.getAttribute(attribute);
     }
 }
