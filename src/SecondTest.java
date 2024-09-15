@@ -1,4 +1,5 @@
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
 import org.junit.Assert;
@@ -18,30 +19,27 @@ public class SecondTest {
     private AppiumDriver driver;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability("platformName","Android");
-        capabilities.setCapability("deviceName","AndroidTestDevice");
-        capabilities.setCapability("platformVersion","8.0");
-        capabilities.setCapability("automationName","Appium");
-        capabilities.setCapability("appPackage","org.wikipedia");
-        capabilities.setCapability("appActivity",".main.MainActivity");
-        capabilities.setCapability("app","/Users/evgenia/Desktop/JavaAppiumAutomation/MyJavaProject/apks/org.wikipedia.apk");
+        capabilities.setCapability("platformName", "Android");
+        capabilities.setCapability("deviceName", "AndroidTestDevice");
+        capabilities.setCapability("platformVersion", "8.0");
+        capabilities.setCapability("automationName", "Appium");
+        capabilities.setCapability("appPackage", "org.wikipedia");
+        capabilities.setCapability("appActivity", ".main.MainActivity");
+        capabilities.setCapability("app", "/Users/evgenia/Desktop/JavaAppiumAutomation/MyJavaProject/apks/org.wikipedia.apk");
 
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
     }
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         driver.quit();
     }
 
     @Test
-    public void testSearchFieldContainsText()
-    {
+    public void testSearchFieldContainsText() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Skip')]"),
                 "Cannot find Skip button",
@@ -63,8 +61,7 @@ public class SecondTest {
     }
 
     @Test
-    public void testFindArticlesAndCanselSearch()
-    {
+    public void testFindArticlesAndCanselSearch() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Skip')]"),
                 "Cannot find Skip button",
@@ -105,25 +102,43 @@ public class SecondTest {
                 "Articles with Java are still present on page",
                 15
         );
-
     }
 
-    private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds)
+    @Test
+    public void testSwipeOnbording()
     {
+        waitForElementPresent(
+                By.xpath("//*[contains(@text,'Skip')]"),
+                "Cannot find Skip button",
+                5
+        );
+
+        swipeUpToFindElement(
+                By.xpath("//*[contains(@text,'Get started')]"),
+                "Cannot find 'Get started' text",
+                15
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Get started')]"),
+                "Cannot find 'Get started' text",
+                15
+        );
+    }
+
+    private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.click();
         return element;
     }
 
-    private WebElement waitForElementAndSentValue(By by, String value, String error_message, long timeoutInSeconds)
-    {
+    private WebElement waitForElementAndSentValue(By by, String value, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.sendKeys(value);
         return element;
     }
 
-    private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds)
-    {
+    private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
         return wait.until(
@@ -131,8 +146,7 @@ public class SecondTest {
         );
     }
 
-    private boolean waitForElementNotPresent(By by, String error_message, long timeoutInSeconds)
-    {
+    private boolean waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
         return wait.until(
@@ -140,8 +154,7 @@ public class SecondTest {
         );
     }
 
-    private void asserElementHasText (By by, String error_message, String expected_text, long timeoutInSeconds)
-    {
+    private void asserElementHasText(By by, String error_message, String expected_text, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
         WebElement element = wait.until(
@@ -150,6 +163,40 @@ public class SecondTest {
 
         String actual_text = element.getText();
 
-        Assert.assertEquals(error_message,expected_text,actual_text);
+        Assert.assertEquals(error_message, expected_text, actual_text);
+    }
+
+    protected void swipeUp(int timeOfSwipe)
+    {
+        TouchAction action = new TouchAction(driver);
+        Dimension size = driver.manage().window().getSize();
+        int y = size.height/ 2;
+        int start_x = (int) (size.width * 0.8);
+        int end_x = (int) (size.width * 0.2);
+
+        action
+                .press(start_x, y)
+                .waitAction(timeOfSwipe)
+                .moveTo(end_x, y)
+                .release()
+                .perform();
+    }
+
+    protected void swipeUpQuick ()
+    {
+        swipeUp(200);
+    }
+
+    protected void swipeUpToFindElement (By by, String error_message, int max_swipes)
+    {
+        int already_swiped = 0;
+        while (driver.findElements(by).size() == 0) {
+            if (already_swiped>max_swipes) {
+                waitForElementPresent(by, "Cannot find element by swiping up \n" + error_message, 0);
+                return;
+            }
+            swipeUpQuick();
+            ++ already_swiped;
+        }
     }
 }
