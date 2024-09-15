@@ -112,7 +112,7 @@ public class SecondTest {
                 5
         );
 
-        swipeLeftUpToFindElement(
+        swipeLeftToFindElement(
                 By.xpath("//*[contains(@text,'Get started')]"),
                 "Cannot find 'Get started' text",
                 15
@@ -254,7 +254,7 @@ public class SecondTest {
         swipeLeft(200);
     }
 
-    protected void swipeLeftUpToFindElement(By by, String error_message, int max_swipes)
+    protected void swipeLeftToFindElement(By by, String error_message, int max_swipes)
     {
         int already_swiped = 0;
         while (driver.findElements(by).size() == 0) {
