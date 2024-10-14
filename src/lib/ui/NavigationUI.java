@@ -6,8 +6,8 @@ import org.openqa.selenium.By;
 public class NavigationUI extends MainPageObject
 {
     public static final String
-    NAVIGATION_BACK_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']",
-    SAVED_LINK = "//android.widget.FrameLayout[@content-desc='Saved']/android.widget.FrameLayout";
+    NAVIGATION_BACK_BUTTON = "xpath://android.widget.ImageButton[@content-desc='Navigate up']",
+    SAVED_LINK = "xpath://android.widget.FrameLayout[@content-desc='Saved']/android.widget.FrameLayout";
 
     public NavigationUI (AppiumDriver driver)
     {
@@ -17,7 +17,7 @@ public class NavigationUI extends MainPageObject
     public void navigation_back ()
     {
         this.waitForElementAndClick(
-                By.xpath(NAVIGATION_BACK_BUTTON),
+                (NAVIGATION_BACK_BUTTON),
                 "Cannot find 'Back' button",
                 5
         );
@@ -26,7 +26,7 @@ public class NavigationUI extends MainPageObject
     public void clickSaved()
     {
         this.waitForElementAndClick(
-                By.xpath(SAVED_LINK),
+                (SAVED_LINK),
                 "Cannot find 'Saved' button",
                 5
         );

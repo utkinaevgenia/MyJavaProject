@@ -6,8 +6,8 @@ import org.openqa.selenium.By;
 public class SavedArticlePageObject extends MainPageObject
 {
     public static final String
-    NAME_OF_FOLDER_TPL = "//*[@text='{FOLDER_NAME}']",
-    ARTICLE_BY_TITLE_TPL = "//*[@text='{TITLE}']";
+    NAME_OF_FOLDER_TPL = "xpath://*[@text='{FOLDER_NAME}']",
+    ARTICLE_BY_TITLE_TPL = "xpath://*[@text='{TITLE}']";
 
     private static String getFolderXpathByName (String name_of_folder)
     {
@@ -28,7 +28,7 @@ public class SavedArticlePageObject extends MainPageObject
     {
         String folder_name_xpath = getFolderXpathByName(name_of_folder);
         this.waitForElementAndClick(
-                By.xpath(folder_name_xpath),
+                (folder_name_xpath),
                 "Cannot find folder by name" + name_of_folder,
                 5
         );
@@ -38,7 +38,7 @@ public class SavedArticlePageObject extends MainPageObject
     {
         String article_title_xpath = getFolderXpathByName(article_title);
         this.waitForElementNotPresent(
-                By.xpath(article_title_xpath),
+                (article_title_xpath),
                 "Saved article still present with title" + article_title,
                 15
         );
@@ -48,7 +48,7 @@ public class SavedArticlePageObject extends MainPageObject
     {
         String article_title_xpath = getFolderXpathByName(article_title);
         this.waitForElementPresent(
-                By.xpath(article_title_xpath),
+                (article_title_xpath),
                 "Cannot find saved article with title" + article_title,
                 15
         );
@@ -59,7 +59,7 @@ public class SavedArticlePageObject extends MainPageObject
         this.waitForArticleToAppearByTitle(article_title);
         String article_title_xpath = getFolderXpathByName(article_title);
         this.swipeElementToLeft(
-                By.xpath(article_title_xpath),
+                (article_title_xpath),
                 "Cannot find saved article"
         );
         this.waitForArticleToDisappearByTitle(article_title);
