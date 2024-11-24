@@ -1,13 +1,14 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
+import lib.Platform;
 
-public class SavedArticlePageObject extends MainPageObject
+abstract public class SavedArticlePageObject extends MainPageObject
 {
-    public static final String
-    NAME_OF_FOLDER_TPL = "xpath://*[@text='{FOLDER_NAME}']",
-    ARTICLE_BY_TITLE_TPL = "xpath://*[@text='{TITLE}']";
+    protected static String
+    NAME_OF_FOLDER_TPL,
+    ARTICLE_BY_TITLE_TPL,
+    CLOSE_SYNC_BUTTON;
 
     private static String getFolderXpathByName (String name_of_folder)
     {
@@ -36,7 +37,7 @@ public class SavedArticlePageObject extends MainPageObject
 
     public void waitForArticleToDisappearByTitle (String article_title)
     {
-        String article_title_xpath = getFolderXpathByName(article_title);
+        String article_title_xpath = getSavedArticleXpathByName(article_title);
         this.waitForElementNotPresent(
                 (article_title_xpath),
                 "Saved article still present with title" + article_title,
@@ -46,7 +47,7 @@ public class SavedArticlePageObject extends MainPageObject
 
     public void waitForArticleToAppearByTitle (String article_title)
     {
-        String article_title_xpath = getFolderXpathByName(article_title);
+        String article_title_xpath = getSavedArticleXpathByName(article_title);
         this.waitForElementPresent(
                 (article_title_xpath),
                 "Cannot find saved article with title" + article_title,
@@ -57,11 +58,18 @@ public class SavedArticlePageObject extends MainPageObject
     public void swipeByArticleToDelete (String article_title)
     {
         this.waitForArticleToAppearByTitle(article_title);
-        String article_title_xpath = getFolderXpathByName(article_title);
-        this.swipeElementToLeft(
-                (article_title_xpath),
-                "Cannot find saved article"
-        );
+        String article_title_xpath = getSavedArticleXpathByName(article_title);
+        if (Platform.getInstance().isAndroid()) {
+            this.swipeElementToLeft(
+                    (article_title_xpath),
+                    "Cannot find saved article"
+            );
+        } else {
+            this.waitForElementAndClick(CLOSE_SYNC_BUTTON,"Cannot find X button", 20);
+            this.swipeElementToLeft(article_title_xpath, "Cannot find saved article");
+            this.clickElementToTheRightUpperCorner(article_title_xpath,"Cannot find saved article");
+        }
+
         this.waitForArticleToDisappearByTitle(article_title);
     }
 }

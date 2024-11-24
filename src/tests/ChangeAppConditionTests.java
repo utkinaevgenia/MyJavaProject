@@ -4,6 +4,9 @@ import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.OnbordingPageObject;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.OndordingPageObjectFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 public class ChangeAppConditionTests extends CoreTestCase
@@ -11,14 +14,14 @@ public class ChangeAppConditionTests extends CoreTestCase
     @Test
     public void testChangeScreenOrientationOnSearchResult ()
     {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
-        OnbordingPageObject OnbordingPageObject = new OnbordingPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
+        OnbordingPageObject OnbordingPageObject = OndordingPageObjectFactory.get(driver);
         OnbordingPageObject.clickToSkip();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.clickByArticleWithSubstring("Java (programming language)");
 
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
         String title_before_rotation = ArticlePageObject.getArticleTitle();
         this.rotateScreenLandscape();
         String title_after_rotation = ArticlePageObject.getArticleTitle();
@@ -39,8 +42,8 @@ public class ChangeAppConditionTests extends CoreTestCase
     @Test
     public void testSearchArticleInBackground ()
     {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
-        OnbordingPageObject OnbordingPageObject = new OnbordingPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
+        OnbordingPageObject OnbordingPageObject = OndordingPageObjectFactory.get(driver);
         OnbordingPageObject.clickToSkip();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");

@@ -1,17 +1,16 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
 
-public class SearchPageObject extends MainPageObject
+abstract public class SearchPageObject extends MainPageObject
 {
-    private static final String
-    SEARCH_INIT_ELEMENT = "xpath://*[contains(@text,'Search Wikipedia')]",
-    SEARCH_INPUT = "id:org.wikipedia:id/search_src_text",
-    SEARCH_RESULT_BY_SUBSTRING_TPL = "xpath://*[contains(@text,'{SUBSTRING}')]",
-    SEARCH_CANSEL_BUTTON = "id:org.wikipedia:id/search_close_btn",
-    SEARCH_RESULT_LOCATOR = "xpath://*[@resource-id='org.wikipedia:id/search_results_list']//*[@resource-id='org.wikipedia:id/page_list_item_title']",
-    SEARCH_EMPTY_RESULTS_LABEL = "xpath://*[@text='No results']";
+    protected static String
+    SEARCH_INIT_ELEMENT,
+    SEARCH_INPUT,
+    SEARCH_RESULT_BY_SUBSTRING_TPL,
+    SEARCH_CANSEL_BUTTON,
+    SEARCH_RESULT_LOCATOR,
+    SEARCH_EMPTY_RESULTS_LABEL;
 
     public SearchPageObject (AppiumDriver driver)
     {
@@ -59,7 +58,7 @@ public class SearchPageObject extends MainPageObject
     public void waitForSearchResult(String substring)
     {
         String search_result_xpath = getResultSearchElement(substring);
-        this.waitForElementPresent((search_result_xpath),"Cannot find search result with substring" + substring,5);
+        this.waitForElementPresent((search_result_xpath),"Cannot find search result with substring " + substring,5);
     }
 
     public void clickByArticleWithSubstring(String substring)
@@ -67,7 +66,7 @@ public class SearchPageObject extends MainPageObject
         String search_result_xpath = getResultSearchElement(substring);
         this.waitForElementAndClick(
                 (search_result_xpath),
-                "Cannot find and click search result with substring" + substring,
+                "Cannot find and click search result with substring " + substring,
                 15);
     }
 

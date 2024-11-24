@@ -1,17 +1,17 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
+import lib.Platform;
 import org.openqa.selenium.WebElement;
 
-public class ArticlePageObject extends MainPageObject
+abstract public class ArticlePageObject extends MainPageObject
 {
-    private static final String
-    TITLE = "xpath://*[contains(@text,'Java (programming language)')]",
-    ADD_TO_LIST_SAVE_BUTTON = "id:org.wikipedia:id/page_save",
-    ADD_TO_LIST_BUTTON = "xpath://*[@text='Add to list']",
-    MY_LIST_TEXT_INPUT = "id:org.wikipedia:id/text_input",
-    MY_LIST_OK_BUTTON = "xpath://*[@text='OK']";
+    protected static String
+    TITLE,
+    ADD_TO_LIST_SAVE_BUTTON,
+    ADD_TO_LIST_BUTTON,
+    MY_LIST_TEXT_INPUT,
+    MY_LIST_OK_BUTTON;
 
     public ArticlePageObject (AppiumDriver driver)
     {
@@ -23,13 +23,17 @@ public class ArticlePageObject extends MainPageObject
         return this.waitForElementPresent(
                 (TITLE),
                 "Cannot find article title",
-                10);
+                20);
     }
 
     public String getArticleTitle ()
     {
         WebElement title_element = waitForTitleElement();
-        return title_element.getAttribute("text");
+        if (Platform.getInstance().isAndroid()) {
+            return title_element.getAttribute("text");
+        } else {
+            return title_element.getAttribute("name");
+        }
     }
 
     public void addArticleToMyList (String name_of_folder)
@@ -60,6 +64,12 @@ public class ArticlePageObject extends MainPageObject
                 5
         );
     }
+
+    public void addArticleToSaved ()
+    {
+        this.waitForElementAndClick(ADD_TO_LIST_SAVE_BUTTON, "Cannot find Saved button", 5);
+    }
+
     public void assertTitleArticlePresent()
     {
         this.assertElementPresent(

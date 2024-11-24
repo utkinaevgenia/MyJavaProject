@@ -4,6 +4,9 @@ import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.OnbordingPageObject;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.OndordingPageObjectFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 public class ArticleTests extends CoreTestCase
@@ -11,14 +14,14 @@ public class ArticleTests extends CoreTestCase
     @Test
     public void testCompareArticleTitle ()
     {
-        OnbordingPageObject OnbordingPageObject = new OnbordingPageObject(driver);
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        OnbordingPageObject OnbordingPageObject = OndordingPageObjectFactory.get(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         OnbordingPageObject.clickToSkip();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.clickByArticleWithSubstring("Java (programming language)");
 
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
 
         String article_title = ArticlePageObject.getArticleTitle();
 
@@ -32,8 +35,8 @@ public class ArticleTests extends CoreTestCase
     @Test
     public void testFindArticlesAndCanselSearch()
     {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
-        OnbordingPageObject OnbordingPageObject = new OnbordingPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
+        OnbordingPageObject OnbordingPageObject = OndordingPageObjectFactory.get(driver);
         OnbordingPageObject.clickToSkip();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
@@ -47,14 +50,14 @@ public class ArticleTests extends CoreTestCase
     @Test
     public void testAssertTitle()
     {
-        OnbordingPageObject OnbordingPageObject = new OnbordingPageObject(driver);
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        OnbordingPageObject OnbordingPageObject = OndordingPageObjectFactory.get(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         OnbordingPageObject.clickToSkip();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.clickByArticleWithSubstring("Java (programming language)");
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
-//        ArticlePageObject.waitForTitleElement();
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
+        ArticlePageObject.waitForTitleElement();
         ArticlePageObject.assertTitleArticlePresent();
     }
 }

@@ -1,15 +1,15 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
 
-public class NavigationUI extends MainPageObject
+abstract public class NavigationUIPageObject extends MainPageObject
 {
-    public static final String
-    NAVIGATION_BACK_BUTTON = "xpath://android.widget.ImageButton[@content-desc='Navigate up']",
-    SAVED_LINK = "xpath://android.widget.FrameLayout[@content-desc='Saved']/android.widget.FrameLayout";
+    protected static String
+    NAVIGATION_BACK_BUTTON,
+    SAVED_LINK,
+    CANCEL_BUTTON;
 
-    public NavigationUI (AppiumDriver driver)
+    public NavigationUIPageObject(AppiumDriver driver)
     {
         super(driver);
     }
@@ -30,5 +30,10 @@ public class NavigationUI extends MainPageObject
                 "Cannot find 'Saved' button",
                 5
         );
+    }
+
+    public void clickCancel()
+    {
+        this.waitForElementAndClick(CANCEL_BUTTON, "Cannot find cancel button in search line",5);
     }
 }
